@@ -1,0 +1,28 @@
+{
+  "name": "bootcampapi",
+  "version": "1.0.0",
+  "description": "Bootcamp backend API",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server",
+    "start": "NODE_ENV=production node server"
+  },
+  "keywords": [
+    "Node",
+    "API",
+    "js",
+    "backend",
+    "mongodb",
+    "express",
+    "nodemon"
+  ],
+  "author": "Tanner Hart",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
