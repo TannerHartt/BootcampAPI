@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 5000;
 const morgan = require('morgan');
 const colors = require('colors');
 const connectDB = require('./config/db');
+const errorHandler = require('./middleware/error');
 
 // Load env variables
 env.config({ path: './config/config.env' });
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Mount routers
 app.use('/api/v1/bootcamps', bootcamps);
+app.use(errorHandler);
 
 const server = app.listen(PORT, console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold));
 
