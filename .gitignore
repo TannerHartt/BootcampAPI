@@ -4,5 +4,5 @@ middleware/logger.js
 vscode/*
 idea/*
 .idea
-data/*
-data
+_data/*
+_data
