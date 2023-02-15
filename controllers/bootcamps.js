@@ -24,7 +24,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // Finding resource 
-    let query = Bootcamp.find(JSON.parse(queryStr));
+    let query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
 
     // Select fields
     if (req.query.select) {
@@ -118,7 +118,9 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
     });
 
     if (!bootcamp) { // If id is correctly formatted but doesn't exist
-        return next(error);
+        return next(
+            new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+        );
     }
 
     res.status(200).json({ success: true, data: bootcamp });
@@ -128,11 +130,15 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @route   DELETE /api/v1/bootcamps/:id
 // @access  Private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+    const bootcamp = await Bootcamp.findById(req.params.id); // findByIdAndDelete doesn't trigger middleware
 
     if (!bootcamp) { // If id is correctly formatted but doesn't exist
-        return next(error);
+        return next(
+            new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+        );
     }
+
+    bootcamp.remove(); // Remove from database and trigger middleware
 
     res.status(200).json({ success: true, data: {} });
 });
