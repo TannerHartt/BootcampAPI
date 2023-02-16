@@ -10,22 +10,22 @@ const geocoder = require('../utils/geocoder');
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
     // Copy req.query
-    const reqQuery = { ...req.query };
+    const reqQuery = { ...req.query }; 
 
     // Field to exclude
-    const removeFields = ['select', 'sort', 'limit', 'page'];
+    const removeFields = ['select', 'sort', 'limit', 'page']; // These are the fields that we don't want to be part of the query string
 
     // Loop over removeFields and delete them from reqQuery
-    removeFields.forEach(param => delete reqQuery[param]);
+    removeFields.forEach(param => delete reqQuery[param]); // This will remove the fields from the query string
 
     // Create query string
-    let queryStr = JSON.stringify(reqQuery);
+    let queryStr = JSON.stringify(reqQuery); 
 
     // Create operators ($gt, $gte, $lt, $lte, $in)
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // Finding resource 
-    let query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
+    let query = Bootcamp.find(JSON.parse(queryStr)).populate('courses'); // This will convery the query string into a JSON object then find the resource
 
     // Select fields
     if (req.query.select) {
