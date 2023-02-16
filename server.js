@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const env = require('dotenv');
 const bootcamps = require('./routes/bootcamps');
@@ -26,6 +27,9 @@ if (process.env.NODE_ENV === 'development') {
 
 // File uploading
 app.use(fileupload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount routers
 app.use('/api/v1/bootcamps', bootcamps);
