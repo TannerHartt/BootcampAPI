@@ -9,81 +9,8 @@ const geocoder = require('../utils/geocoder');
 // @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
-    // Copy req.query
-    const reqQuery = { ...req.query }; 
-
-    // Field to exclude
-    const removeFields = ['select', 'sort', 'limit', 'page']; // These are the fields that we don't want to be part of the query string
-
-    // Loop over removeFields and delete them from reqQuery
-    removeFields.forEach(param => delete reqQuery[param]); // This will remove the fields from the query string
-
-    // Create query string
-    let queryStr = JSON.stringify(reqQuery); 
-
-    // Create operators ($gt, $gte, $lt, $lte, $in)
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
-
-    // Finding resource 
-    let query = Bootcamp.find(JSON.parse(queryStr)).populate('courses'); // This will convery the query string into a JSON object then find the resource
-
-    // Select fields
-    if (req.query.select) {
-        const fields = req.query.select.split(',').join(' ');
-        query = query.select(fields);
-    }
-
-    // Sort
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ');
-        query = query.sort(sortBy);
-    } else {
-        query = query.sort('-createdAt');
-    }
-
-    // Pagination
-    const page = parseInt(req.query.page, 10) || 1; // If page is not specified, default to 1
-    const limit = parseInt(req.query.limit, 10) || 25; // If limit is not specified, default to 25
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const total = await Bootcamp.countDocuments();
-
-    query = query.skip(startIndex).limit(limit);
-
-    // Executing query
-    const bootcamps = await query;
-
-    // Pagination result
-    const pagination = {
-        limit,
-        prev: startIndex > 0 ? page - 1 : null,
-        next: endIndex < total ? page + 1 : null,
-        current: page,
-        query: req.url,
-        total
-    };
-
-    if (endIndex < total) {
-        pagination.next = {
-            page: page + 1,
-            limit
-        };
-    }
-
-    if (startIndex > 0) {
-        pagination.prev = {
-            page: page - 1,
-            limit
-        };
-    }
-
-    res.status(200).json({ 
-        success: true, 
-        count: bootcamps.length, 
-        pagination, 
-        data: bootcamps });
+    res.status(200).json(res.advancedResults);
 });
-
 // @desc    Get a bootcamp by id
 // @route   GET /api/v1/bootcamps/:id
 // @access  Public
