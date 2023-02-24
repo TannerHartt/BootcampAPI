@@ -11,6 +11,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
     res.status(200).json(res.advancedResults);
 });
+
 // @desc    Get a bootcamp by id
 // @route   GET /api/v1/bootcamps/:id
 // @access  Public
