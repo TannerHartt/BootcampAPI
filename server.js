@@ -8,6 +8,8 @@ const errorHandler = require('./middleware/error');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
 
 // Route files
 const bootcamps = require('./routes/bootcamps');
@@ -39,6 +41,12 @@ app.use(fileupload());
 
 // Sanitize data
 app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent XSS attacks
+app.use(xss());
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
